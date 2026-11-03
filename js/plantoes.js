@@ -39,6 +39,8 @@ if (form && list) {
     });
     count.textContent = shown === 1 ? '1 unidade' : `${shown} unidades`;
     empty.hidden = shown > 0;
+    const filtered = Boolean(form.q.value.trim() || uf || esp || tipo);
+    const top = document.querySelector('.results-bar [data-clear]'); if (top) top.hidden = !filtered;
     // Mantém o endereço compartilhável com os filtros atuais.
     const p = new URLSearchParams();
     if (form.q.value.trim()) p.set('q', form.q.value.trim());
@@ -47,6 +49,11 @@ if (form && list) {
     history.replaceState(null, '', p.toString() ? `?${p}` : location.pathname);
   };
 
+  // Limpar filtros (barra de resultados e estado vazio)
+  const clears = document.querySelectorAll('[data-clear]');
+  clears.forEach(b => b.addEventListener('click', () => {
+    form.reset(); apply(); form.q.focus();
+  }));
   form.addEventListener('input', apply);
   form.addEventListener('change', apply);
   apply();

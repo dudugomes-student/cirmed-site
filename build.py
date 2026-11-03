@@ -7,7 +7,7 @@ Uso:  python3 build.py
 Quando o domínio próprio estiver no ar, troque SITE_URL e rode de novo.
 """
 import json, pathlib, datetime, html, unicodedata
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 
 SITE_URL = "https://dudugomes-student.github.io/cirmed-site"   # sem barra no fim
 
@@ -87,10 +87,15 @@ def orbit(label):
 </figure>'''
 
 def map_stage(label):
+    # Globo mostrando as Américas; os pinos ficam sobre o Brasil e se movem junto com o globo.
     return f'''<figure class="map-stage" role="img" aria-label="{label}">
-  <span class="orbit-glow" aria-hidden="true"></span>
-  {float3d("mapa", "map-main", 0.12)}
-  {float3d("pino", "pin-a", 0.5, 0.2)}{float3d("pino", "pin-b", 0.7, 0.9)}{float3d("pino", "pin-c", 0.4, 1.6)}
+  <span class="map-glow" aria-hidden="true"></span>
+  <span class="map-move" data-depth="0.12">
+    {img3d("globo", cls="map-globe")}
+    <span class="map-pin mp-b">{img3d("pino", cls="pin-img")}</span>
+    <span class="map-pin mp-c">{img3d("pino", cls="pin-img")}</span>
+    <span class="map-pin mp-a">{img3d("pino", cls="pin-img")}<span class="pin-pulse"></span></span>
+  </span>
 </figure>'''
 
 ESP_ICONES = [("coracao", "Cardiologia"), ("bebe", "Pediatria"), ("seringa", "Anestesiologia"), ("osso", "Ortopedia"),
@@ -158,10 +163,10 @@ FOOTER = f'''<footer class="site-footer">
     </div>
   </div>
 </footer>
-<div class="mobile-bar">
+<nav class="mobile-bar" aria-label="Atalhos">
   {wa_btn("WhatsApp")}
   <a class="btn btn-outline" href="plantoes.html">{icon("search")}<span>Plantões</span></a>
-</div>'''
+</nav>'''
 
 def page(slug, title, desc, body, scripts=("main", "paths-bg", "motion"), noindex=False):
     url = f"{SITE_URL}/" if slug == "index.html" else f"{SITE_URL}/{slug}"
@@ -175,6 +180,8 @@ def page(slug, title, desc, body, scripts=("main", "paths-bg", "motion"), noinde
             "address": {"@type": "PostalAddress", "addressLocality": "Bauru", "addressRegion": "SP", "addressCountry": "BR"},
             "sameAs": [INSTAGRAM]}, ensure_ascii=False) + "</script>"
     robots = '<meta name="robots" content="noindex">' if noindex else ""
+    if slug == "404.html":
+        robots += f'<base href="{urlparse(SITE_URL).path.rstrip("/")}/">'
     out = f'''<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -278,7 +285,7 @@ page("index.html",
 <section class="band-navy" aria-label="Números e especialidades"><div class="wrap">{stats()}</div>{marquee()}</section>
 
 <section class="section" aria-labelledby="plantoes-title"><div class="wrap split">
-  {map_stage("Mapa em 3D com pinos azuis flutuando.")}
+  {map_stage("Globo em 3D mostrando as Américas, com pinos azuis sobre o Brasil.")}
   <div class="reveal" style="--d:.1s">
     <p class="kicker">Para médicos</p>
     <h2 class="title" id="plantoes-title">Ache seu <span class="blue">plantão</span></h2>
@@ -362,13 +369,13 @@ page("plantoes.html",
       {"".join(f'<label><input type="radio" name="tipo" value="{k}"> {v.split(" ")[0]}</label>' for k, v in TIPOS.items())}
     </fieldset>
   </form>
-  <p class="results-count" role="status" aria-live="polite" data-count>{N_UNIDADES} unidades</p>
+  <div class="results-bar"><p class="results-count" role="status" aria-live="polite" data-count>{N_UNIDADES} unidades</p><button class="link-btn" type="button" data-clear hidden>Limpar filtros</button></div>
   <ul class="units" data-units>{cards}</ul>
   <div class="empty" data-empty hidden>
     <span class="float">{img3d("lupa", cls="empty-art")}</span>
     <h3 class="subtitle">Nada com esses filtros, por enquanto</h3>
     <p class="muted">Deixe seu cadastro com a especialidade e o estado onde quer trabalhar.</p>
-    <a class="btn btn-primary" href="#cadastro">Fazer cadastro</a>
+    <div class="btn-row" style="justify-content:center"><button class="btn btn-outline" type="button" data-clear>Limpar filtros</button><a class="btn btn-primary" href="#cadastro">Fazer cadastro</a></div>
   </div>
 </div></section>
 
@@ -488,7 +495,7 @@ page("sobre.html",
     <h1 class="display" id="hero-title" data-draw>Sobre a {stroke("Cirmed")}</h1>
     <p class="lede">Sede em Bauru (SP). Plantões em {len(UFS_ATIVAS)} estados.</p>
   </div>
-  {map_stage("Mapa em 3D com pinos azuis flutuando.")}
+  {map_stage("Globo em 3D mostrando as Américas, com pinos azuis sobre o Brasil.")}
 </div></section>
 
 <section class="band-navy" aria-label="Números"><div class="wrap">{stats()}</div></section>
