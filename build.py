@@ -73,7 +73,7 @@ def float3d(name, cls="", depth=0.3, delay=0.0, alt=""):
     return (f'<span class="float {cls}" data-depth="{depth}" style="--fd:{delay:.2f}s">'
             f'{img3d(name, alt, cls="float-img")}</span>')
 
-ORBITA = ["estetoscopio", "medica", "ambulancia", "calendario", "coracao", "pino"]
+ORBITA = ["estetoscopio", "prancheta", "ambulancia", "calendario", "coracao", "pino"]
 def orbit(label):
     n = len(ORBITA)
     items = "".join(
@@ -228,14 +228,14 @@ def form_result():
             f'<a class="btn btn-primary" href="{WA}" target="_blank" rel="noopener noreferrer">{icon("wa")}<span>Abrir no WhatsApp</span>{NEW_TAB}</a></div>')
 
 SERVICOS = [
-    ("medica", "Plantonistas", "Um plantão ou a equipe inteira."),
+    ("estetoscopio", "Plantonistas", "Um plantão ou a equipe inteira."),
     ("calendario", "Escala terceirizada", "A Cirmed monta e repõe faltas."),
     ("hospital", "Gestão de unidades", "Do quadro de pessoal à rotina."),
     ("ambulancia", "Unidades móveis e SAMU", "Equipes para resgate."),
 ]
 def service_tiles():
     return '<div class="tiles">' + "".join(
-        f'<article class="tile reveal" data-tilt style="--d:{i*0.08:.2f}s"><span class="tile-art">{img3d(n)}</span><h3>{t}</h3><p>{p}</p></article>'
+        f'<article class="tile{" tile-blue" if i == 1 else ""} reveal" data-tilt style="--d:{i*0.08:.2f}s"><span class="tile-art">{img3d(n)}</span><h3>{t}</h3><p>{p}</p></article>'
         for i, (n, t, p) in enumerate(SERVICOS)) + "</div>"
 
 def stats():
@@ -267,17 +267,17 @@ page("index.html",
       <p class="kicker">Plantões e equipes médicas</p>
       <h1 class="display" id="hero-title" data-draw>Médicos para o seu plantão, em {stroke("todo o Brasil")}</h1>
       <div class="doors">
-        <a class="door" data-tilt href="para-hospitais.html"><small>Sou hospital ou unidade</small><strong>Preciso de médicos</strong><span class="go">Montar equipe {icon("arrow")}</span></a>
-        <a class="door door-blue" data-tilt href="plantoes.html"><small>Sou médico</small><strong>Quero plantão</strong><span class="go">Buscar plantões {icon("arrow")}</span></a>
+        <a class="door" data-tilt href="para-hospitais.html">{img3d("hospital", cls="door-img")}<small>Sou hospital ou unidade</small><strong>Preciso de médicos</strong><span class="go">Montar equipe {icon("arrow")}</span></a>
+        <a class="door door-blue" data-tilt href="plantoes.html">{img3d("estetoscopio", cls="door-img")}<small>Sou médico</small><strong>Quero plantão</strong><span class="go">Buscar plantões {icon("arrow")}</span></a>
       </div>
     </div>
-    {orbit("Hospital em 3D no centro, com estetoscópio, médica, ambulância, calendário, coração e pino girando em volta.")}
+    {orbit("Hospital em 3D no centro, com estetoscópio, prancheta, ambulância, calendário, coração e pino girando em volta.")}
   </div>
 </section>
 
-<section class="section section-tight" aria-label="Números"><div class="wrap">{stats()}</div></section>
+<section class="band-navy" aria-label="Números e especialidades"><div class="wrap">{stats()}</div>{marquee()}</section>
 
-<section class="section section-sky" aria-labelledby="plantoes-title"><div class="wrap split">
+<section class="section" aria-labelledby="plantoes-title"><div class="wrap split">
   {map_stage("Mapa em 3D com pinos azuis flutuando.")}
   <div class="reveal" style="--d:.1s">
     <p class="kicker">Para médicos</p>
@@ -291,9 +291,7 @@ page("index.html",
   </div>
 </div></section>
 
-<section class="section section-marquee" aria-label="Especialidades">{marquee()}</section>
-
-<section class="section" aria-labelledby="servicos-title"><div class="wrap">
+<section class="section section-sky" aria-labelledby="servicos-title"><div class="wrap">
   <div class="section-head reveal">
     <p class="kicker">Para hospitais e unidades</p>
     <h2 class="title" id="servicos-title">O que a <span class="blue">Cirmed</span> faz</h2>
@@ -350,7 +348,7 @@ page("plantoes.html",
     <h1 class="display" id="hero-title" data-draw>Plantões {stroke("abertos")}</h1>
     <p class="lede">{N_UNIDADES} unidades em {len(UFS_ATIVAS)} estados. Escolha e chame no WhatsApp.</p>
   </div>
-  <figure class="hero-cluster" aria-hidden="true">{float3d("estetoscopio", "c-main", 0.25)}{float3d("medico", "c-a", 0.5, 0.6)}{float3d("calendario", "c-b", 0.4, 1.2)}{float3d("pino", "c-c", 0.7, 1.8)}</figure>
+  <figure class="hero-cluster" aria-hidden="true">{float3d("estetoscopio", "c-main", 0.25)}{float3d("seringa", "c-a", 0.5, 0.6)}{float3d("calendario", "c-b", 0.4, 1.2)}{float3d("pino", "c-c", 0.7, 1.8)}</figure>
 </div></section>
 
 <section class="section section-search" aria-labelledby="busca-title"><div class="wrap">
@@ -433,7 +431,7 @@ page("para-hospitais.html",
     <h1 class="display" id="hero-title" data-draw>Faltou plantonista {stroke("hoje?")}</h1>
     <div class="btn-row">{wa_btn()}<a class="btn btn-outline" href="#equipe"><span>Montar equipe</span>{icon("arrow")}</a></div>
   </div>
-  <figure class="hero-cluster" aria-hidden="true">{float3d("hospital", "c-main", 0.25)}{float3d("ambulancia", "c-a", 0.55, 0.5)}{float3d("medica", "c-b", 0.45, 1.1)}{float3d("prancheta", "c-c", 0.7, 1.7)}</figure>
+  <figure class="hero-cluster" aria-hidden="true">{float3d("hospital", "c-main", 0.25)}{float3d("ambulancia", "c-a", 0.55, 0.5)}{float3d("calendario", "c-b", 0.45, 1.1)}{float3d("prancheta", "c-c", 0.7, 1.7)}</figure>
 </div></section>
 
 <section class="section" id="equipe" aria-labelledby="equipe-title"><div class="wrap">
@@ -463,7 +461,7 @@ page("para-hospitais.html",
   </form>
 </div></section>
 
-<section class="section section-marquee" aria-label="Especialidades">{marquee()}</section>
+<section class="band-navy band-thin" aria-label="Especialidades">{marquee()}</section>
 
 <section class="section section-sky" aria-labelledby="serv-title"><div class="wrap">
   <div class="section-head reveal"><p class="kicker">Serviços</p><h2 class="title" id="serv-title">O que dá para <span class="blue">contratar</span></h2></div>
@@ -493,7 +491,7 @@ page("sobre.html",
   {map_stage("Mapa em 3D com pinos azuis flutuando.")}
 </div></section>
 
-<section class="section section-tight" aria-label="Números"><div class="wrap">{stats()}</div></section>
+<section class="band-navy" aria-label="Números"><div class="wrap">{stats()}</div></section>
 
 <section class="section" aria-labelledby="faz-title"><div class="wrap">
   <div class="section-head reveal"><h2 class="title" id="faz-title">O que a <span class="blue">Cirmed</span> faz</h2></div>
@@ -528,7 +526,7 @@ page("contato.html",
   <h2 class="sr-only" id="canais-title">Canais</h2>
   <div class="channels">
     <a class="channel channel-art reveal" data-tilt href="{WA}" target="_blank" rel="noopener noreferrer">{img3d("hospital", cls="channel-img")}<small>Instituições</small><strong>{WA_SHOW}</strong><span>WhatsApp</span>{NEW_TAB}</a>
-    <a class="channel channel-art reveal" data-tilt style="--d:.06s" href="https://wa.me/{WA_PLANTAO}" target="_blank" rel="noopener noreferrer">{img3d("medica", cls="channel-img")}<small>Médicos e plantões</small><strong>{WA_PLANTAO_SHOW}</strong><span>WhatsApp</span>{NEW_TAB}</a>
+    <a class="channel channel-art reveal" data-tilt style="--d:.06s" href="https://wa.me/{WA_PLANTAO}" target="_blank" rel="noopener noreferrer">{img3d("estetoscopio", cls="channel-img")}<small>Médicos e plantões</small><strong>{WA_PLANTAO_SHOW}</strong><span>WhatsApp</span>{NEW_TAB}</a>
     <a class="channel channel-art reveal" data-tilt style="--d:.12s" href="mailto:{EMAIL}">{img3d("envelope", cls="channel-img")}<small>E-mail</small><strong>{EMAIL}</strong><span>Propostas e documentos</span></a>
   </div>
   <p class="muted contact-note">Instagram <a href="{INSTAGRAM}" target="_blank" rel="noopener noreferrer">@cirmedbrasil{NEW_TAB}</a> · Dados pessoais (LGPD): Marciano Rodrigues Morais, <a href="mailto:marcio@cirmed.com.br">marcio@cirmed.com.br</a></p>

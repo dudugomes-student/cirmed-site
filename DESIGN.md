@@ -24,6 +24,9 @@ Fundo branco que desce até o azul claro. O traço azul (degradê #8DBBD9 → #2
 ## Tipografia
 Nunito auto-hospedada (600, 700, 800, 900). Títulos em 900 maiúsculas, palavra-chave em azul. Apoio em 600.
 
+## Ritmo e hierarquia
+Cabeçalho flutuante em pílula com fundo desfocado. Maiúsculas só no título principal de cada página; títulos de seção em caixa normal, com a palavra-chave em azul. Faixas em azul-marinho (números e especialidades) quebram o branco; a chamada final é azul e o rodapé é marinho. Cartões de serviço e portas de entrada com o ícone 3D saindo da borda; um cartão azul por grupo. No celular, a órbita fica entre o título e as portas, e a barra de WhatsApp aparece só depois do topo.
+
 ## Componentes
 Botões em pílula (`.btn-primary`, `.btn-outline`, `.btn-white`), portas de público (`.door`), chips de especialidade (`.chips`, borda azul, alguns cheios), cartões de serviço (`.card`), etapas ligadas pelo traço (`.steps`), situações (`.situations`), selo de integridade (`.trust`), formulários que montam a mensagem do WhatsApp (`[data-whatsapp-form]`), barra fixa de contato no celular (`.mobile-bar`).
 

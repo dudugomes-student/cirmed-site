@@ -105,6 +105,7 @@ const frame = () => {
   raf = 0;
   const max = root.scrollHeight - innerHeight;
   if (bar) bar.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
+  root.classList.toggle('show-bar', scrollY > 380);
   if (reduce) return;
   tx += (mx - tx) * 0.08; ty += (my - ty) * 0.08;
   floats.forEach(el => {
