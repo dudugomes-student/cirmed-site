@@ -129,7 +129,7 @@ FOOTER = f'''<footer class="site-footer">
   <a class="btn btn-outline" href="para-medicos.html">{icon("steth")}<span>Plantões</span></a>
 </div>'''
 
-def page(slug, title, desc, body, scripts=("main",)):
+def page(slug, title, desc, body, scripts=("main", "paths-bg")):
     url = f"{SITE_URL}/" if slug == "index.html" else f"{SITE_URL}/{slug}"
     js = "".join(f'<script src="js/{s}.js" defer></script>' for s in scripts)
     org = json.dumps({
@@ -179,11 +179,10 @@ def page(slug, title, desc, body, scripts=("main",)):
 def cta(title_html, text, button=None):
     button = button or wa_btn("Falar no WhatsApp", "btn btn-white")
     return f'''<section class="section" aria-labelledby="cta-title"><div class="wrap">
-  <div class="cta reveal">
+  <div class="cta reveal"><div class="paths-bg paths-light" data-paths aria-hidden="true"></div>
     <h2 class="title" id="cta-title">{title_html}</h2>
     <p class="lede">{text}</p>
     <div class="btn-row">{button}<a class="btn btn-outline" href="mailto:{EMAIL}">{icon("mail")}<span>{EMAIL}</span></a></div>
-    <svg class="cta-line" viewBox="0 0 400 300" aria-hidden="true"><path d="M20 20c0 90 60 120 60 190 0 60 90 80 110 30 18-46 80-40 120-10s50 70 70 60"/><circle cx="190" cy="242" r="16" fill="none" stroke="#8DBBD9" stroke-width="5"/></svg>
   </div>
 </div></section>'''
 
@@ -231,7 +230,7 @@ TRUST = f'''<div class="trust reveal">
 page("index.html",
  "Cirmed | Plantões e equipes médicas para todo o Brasil",
  "A Cirmed fornece médicos plantonistas e terceiriza a escala médica de hospitais, UPAs e unidades de saúde em todo o Brasil. Médico, cadastre-se para receber plantões.",
- f'''<section class="hero" aria-labelledby="hero-title">
+ f'''<section class="hero" aria-labelledby="hero-title"><div class="paths-bg" data-paths aria-hidden="true"></div>
   <div class="wrap hero-grid">
     <div>
       <p class="kicker">Plantões e equipes médicas</p>
@@ -297,7 +296,7 @@ page("index.html",
 page("para-hospitais.html",
  "Para hospitais e unidades de saúde | Cirmed",
  "Plantonistas, terceirização da escala médica, administração de unidades e equipes para unidades móveis e SAMU. Veja como a Cirmed trabalha e peça um contato.",
- f'''<section class="page-hero" aria-labelledby="hero-title"><div class="wrap">
+ f'''<section class="page-hero" aria-labelledby="hero-title"><div class="paths-bg" data-paths aria-hidden="true"></div><div class="wrap">
   <nav class="crumbs" aria-label="Você está em"><a href="index.html">Início</a> / Para hospitais</nav>
   <p class="kicker">Para hospitais, UPAs e unidades de saúde</p>
   <h1 class="display" id="hero-title" data-draw>Faltou plantonista {stroke("hoje?")}</h1>
@@ -375,7 +374,7 @@ page("para-hospitais.html",
 </div></section>
 
 <section class="section" aria-label="Programa de Integridade" style="padding-top:0"><div class="wrap">{TRUST}</div></section>
-''', scripts=("main", "forms"))
+''', scripts=("main", "paths-bg", "forms"))
 
 # =====================================================================
 # Para médicos
@@ -385,7 +384,7 @@ esp_opts = "".join(f"<option>{e}</option>" for e in ESPECIALIDADES) + "<option>O
 page("para-medicos.html",
  "Plantões para médicos | Cirmed",
  "Médico, receba plantões na sua especialidade e no estado onde quer trabalhar, no horário que você pode. Cadastro rápido pelo WhatsApp com CRM, especialidade e estado.",
- f'''<section class="page-hero" aria-labelledby="hero-title"><div class="wrap">
+ f'''<section class="page-hero" aria-labelledby="hero-title"><div class="paths-bg" data-paths aria-hidden="true"></div><div class="wrap">
   <nav class="crumbs" aria-label="Você está em"><a href="index.html">Início</a> / Para médicos</nav>
   <p class="kicker">Para médicos</p>
   <h1 class="display" id="hero-title" data-draw>Plantão no horário {stroke("que você pode")}</h1>
@@ -443,7 +442,7 @@ page("para-medicos.html",
   </div>
   <div class="reveal" style="--d:.1s">{chips()}</div>
 </div></section>
-''', scripts=("main", "forms"))
+''', scripts=("main", "paths-bg", "forms"))
 
 # =====================================================================
 # Sobre
@@ -451,7 +450,7 @@ page("para-medicos.html",
 page("sobre.html",
  "Sobre a Cirmed | Plantões e equipes médicas",
  "Quem é a CIRMED Serviços Médicos LTDA: sede em Bauru (SP), atuação em todo o Brasil, serviços, diretoria e Programa de Integridade.",
- f'''<section class="page-hero" aria-labelledby="hero-title"><div class="wrap split">
+ f'''<section class="page-hero" aria-labelledby="hero-title"><div class="paths-bg" data-paths aria-hidden="true"></div><div class="wrap split">
   <div>
     <nav class="crumbs" aria-label="Você está em"><a href="index.html">Início</a> / Sobre</nav>
     <p class="kicker">Sobre</p>
@@ -496,7 +495,7 @@ page("sobre.html",
 page("contato.html",
  "Contato | Cirmed",
  f"Fale com a Cirmed pelo WhatsApp {WA_SHOW} ou pelo e-mail {EMAIL}, de segunda a sexta, das 8h às 19h.",
- f'''<section class="page-hero" aria-labelledby="hero-title"><div class="wrap">
+ f'''<section class="page-hero" aria-labelledby="hero-title"><div class="paths-bg" data-paths aria-hidden="true"></div><div class="wrap">
   <nav class="crumbs" aria-label="Você está em"><a href="index.html">Início</a> / Contato</nav>
   <p class="kicker">Contato</p>
   <h1 class="display" id="hero-title" data-draw>Fale com a {stroke("Cirmed")}</h1>
@@ -529,7 +528,7 @@ page("contato.html",
 page("programa-de-integridade.html",
  "Programa de Integridade | Cirmed",
  "Programa de Integridade da CIRMED Serviços Médicos LTDA: princípios, diretrizes, relação com a administração pública e canal para relatar irregularidades.",
- f'''<section class="page-hero" aria-labelledby="hero-title"><div class="wrap">
+ f'''<section class="page-hero" aria-labelledby="hero-title"><div class="paths-bg" data-paths aria-hidden="true"></div><div class="wrap">
   <nav class="crumbs" aria-label="Você está em"><a href="index.html">Início</a> / Programa de Integridade</nav>
   <p class="kicker">CIRMED Serviços Médicos LTDA · CNPJ {CNPJ}</p>
   <h1 class="title" id="hero-title">Programa de <span class="blue">Integridade</span></h1>
@@ -577,7 +576,7 @@ page("programa-de-integridade.html",
 page("privacidade.html",
  "Política de Privacidade | Cirmed",
  "Como o site da Cirmed trata dados pessoais: o que é coletado, para quê, por quanto tempo e como pedir acesso, correção ou exclusão.",
- f'''<section class="page-hero" aria-labelledby="hero-title"><div class="wrap">
+ f'''<section class="page-hero" aria-labelledby="hero-title"><div class="paths-bg" data-paths aria-hidden="true"></div><div class="wrap">
   <nav class="crumbs" aria-label="Você está em"><a href="index.html">Início</a> / Política de Privacidade</nav>
   <p class="kicker">Atualizada em 3 de novembro de 2026</p>
   <h1 class="title" id="hero-title">Política de <span class="blue">Privacidade</span></h1>
@@ -621,7 +620,7 @@ page("privacidade.html",
 page("404.html",
  "Página não encontrada | Cirmed",
  "Esta página não existe ou mudou de endereço.",
- f'''<section class="page-hero" aria-labelledby="hero-title" style="min-height:60vh"><div class="wrap">
+ f'''<section class="page-hero" aria-labelledby="hero-title" style="min-height:60vh"><div class="paths-bg" data-paths aria-hidden="true"></div><div class="wrap">
   <p class="kicker">Erro 404</p>
   <h1 class="display" id="hero-title" data-draw>Página {stroke("não encontrada")}</h1>
   <p class="lede">O endereço pode ter mudado. Escolha um caminho:</p>
