@@ -9,7 +9,7 @@ const clean = (value, limit = 200) => String(value ?? '')
   .slice(0, limit);
 
 const greetings = {
-  hospital: 'Olá, Cirmed. Sou de uma instituição de saúde e quero conversar sobre plantões.',
+  hospital: 'Olá, Cirmed. Sou de uma instituição de saúde e preciso de médicos.',
   medico: 'Olá, Cirmed. Sou médico(a) e quero receber os plantões disponíveis.',
   geral: 'Olá, Cirmed. Gostaria de conversar.'
 };
@@ -26,6 +26,14 @@ document.querySelectorAll('[data-whatsapp-form]').forEach(form => {
   form.addEventListener('input', () => { result.hidden = true; });
   form.addEventListener('submit', event => {
     event.preventDefault();
+    // Montar equipe: pelo menos uma especialidade.
+    const firstPick = form.querySelector('.picks input');
+    if (firstPick && !form.querySelector('.picks input:checked')) {
+      firstPick.setCustomValidity('Escolha pelo menos uma especialidade.');
+      firstPick.reportValidity();
+      form.querySelector('.picks').addEventListener('change', () => firstPick.setCustomValidity(''), { once: true });
+      return;
+    }
     if (!form.reportValidity()) return;
 
     const lines = [greetings[kind] || greetings.geral, ''];
@@ -45,9 +53,26 @@ document.querySelectorAll('[data-whatsapp-form]').forEach(form => {
     groups.forEach((values, label) => lines.push(`${label}: ${values.join(', ')}`));
 
     // encodeURIComponent: espaço vira %20 (o WhatsApp não trata "+" como espaço em todos os aparelhos).
-    link.href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(lines.join('\n'))}`;
+    link.href = `https://wa.me/${form.dataset.number || WHATSAPP}?text=${encodeURIComponent(lines.join('\n'))}`;
     result.hidden = false;
     status.textContent = 'Mensagem pronta. Confira o texto e envie no WhatsApp.';
     link.focus();
   });
+});
+
+// Montar equipe: mostra quantas especialidades foram escolhidas e onde a Cirmed já tem cada uma na escala.
+document.querySelectorAll('[data-team]').forEach(form => {
+  const big = form.querySelector('[data-team-count]');
+  const text = form.querySelector('[data-team-text]');
+  const update = changed => {
+    const picked = [...form.querySelectorAll('.picks input:checked')];
+    big.textContent = picked.length;
+    if (!picked.length) { text.textContent = 'Escolha uma ou mais especialidades.'; return; }
+    const last = changed && changed.checked ? changed : picked[picked.length - 1];
+    const n = Number(last.dataset.units), ufs = Number(last.dataset.ufs);
+    const where = n ? `${last.value} já está na escala de ${n} ${n === 1 ? 'unidade' : 'unidades'} da Cirmed, em ${ufs} ${ufs === 1 ? 'estado' : 'estados'}.` : `${last.value}: sob consulta.`;
+    text.textContent = `${picked.length === 1 ? 'especialidade escolhida' : 'especialidades escolhidas'}. ${where}`;
+  };
+  form.querySelector('.picks').addEventListener('change', e => update(e.target));
+  update();
 });

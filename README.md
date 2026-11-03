@@ -6,9 +6,10 @@ Site estático (HTML, CSS e JavaScript, sem dependências no navegador) da CIRME
 
 | Arquivo | Conteúdo |
 | --- | --- |
-| `index.html` | Início: as duas portas (hospitais e médicos), serviços, especialidades, etapas, integridade |
-| `para-hospitais.html` | Situações, serviços, etapas e o pedido que monta a mensagem do WhatsApp |
-| `para-medicos.html` | Como funciona e o cadastro (CRM, UF, especialidade, estado, turnos) pelo WhatsApp |
+| `index.html` | Início: as duas portas, números, busca rápida de plantões, serviços, integridade |
+| `plantoes.html` | Busca de plantões (texto, estado, especialidade, tipo de unidade) e cadastro de médicos |
+| `para-hospitais.html` | Montar equipe: escolhe especialidades e turnos e envia o pedido; serviços e etapas |
+| `para-medicos.html` | Redireciona para `plantoes.html` |
 | `sobre.html` | Quem é a Cirmed e os dados da empresa |
 | `contato.html` | Canais e atalhos para os dois formulários |
 | `programa-de-integridade.html` | Texto do programa, organizado em seções |
@@ -29,6 +30,20 @@ Não edite os `.html` direto: o próximo build sobrescreve.
 
 **Contato:** número do WhatsApp em `build.py` (`WA_NUMBER`, `WA_SHOW`) e em `js/forms.js` (`WHATSAPP`).
 
+## Plantões abertos
+
+Lista em `tools/plantoes.json`, tirada da página Vagas Médicas do site antigo (63 unidades). Cada item: `[unidade, cidade, UF, tipo, [especialidades]]`, com tipo `hospital`, `ubs` ou `upa`. Para abrir ou fechar um plantão, edite o arquivo e rode `python3 build.py`. Os números da página inicial (unidades, estados, especialidades) saem daí.
+
+## Ilustrações 3D
+
+Todas as ilustrações (menos o logo) são 3D, feitas com three.js em `tools/3d/scenes.js` e renderizadas uma vez para `assets/3d/*.webp`:
+
+```bash
+npm pack three@0.170.0 && tar xzf three-0.170.0.tgz
+python3 tools/3d/render.py ./package          # todas
+python3 tools/3d/render.py ./package hero     # só uma
+```
+
 ## Visual
 
 Ver `DESIGN.md`. Contorno do Brasil gerado de dados reais (world-atlas, Natural Earth) por `tools/brasil.cjs`, salvo em `tools/brasil.json`.
@@ -36,6 +51,7 @@ Ver `DESIGN.md`. Contorno do Brasil gerado de dados reais (world-atlas, Natural 
 ## Pendências antes do domínio oficial
 
 - Nome e CRM do diretor técnico (exigência da Resolução CFM 2.336/2023 para publicidade de empresa médica). Entram no rodapé.
-- Confirmar o WhatsApp oficial: o site usa (11) 99124-3655; o site antigo mostra 95153-1000, 94715-0484 e (11) 5197-8823.
+- Confirmar os WhatsApps: instituições em (11) 99124-3655 e plantões em (11) 95153-1000 (o número do "Quero Plantão" do site antigo).
+- Confirmar que as unidades podem continuar aparecendo pelo nome (o site antigo já as lista) e manter `tools/plantoes.json` atualizado.
 - Confirmar o texto do serviço "Terceirização da escala" (monta a escala, acompanha as trocas e repõe quem não pode ir).
 - Revisão jurídica da política de privacidade.
