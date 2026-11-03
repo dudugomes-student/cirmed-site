@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dudugomes-student.github.io/cirmed-site/sitemap.xml
