@@ -36,13 +36,11 @@ Lista em `tools/plantoes.json`, tirada da página Vagas Médicas do site antigo 
 
 ## Ilustrações 3D
 
-Todas as ilustrações (menos o logo) são 3D, feitas com three.js em `tools/3d/scenes.js` e renderizadas uma vez para `assets/3d/*.webp`:
+Ícones 3D desenhados do Fluent Emoji, da Microsoft (licença MIT, ver `assets/3d/LICENSE.txt`), em `assets/3d/*.webp`. Os que tinham vermelho ou rosa foram recoloridos para o azul da marca com `tools/recolor.py`. Só o logo não é 3D.
 
-```bash
-npm pack three@0.170.0 && tar xzf three-0.170.0.tgz
-python3 tools/3d/render.py ./package          # todas
-python3 tools/3d/render.py ./package hero     # só uma
-```
+## Movimento
+
+`js/motion.js`: transição entre páginas (cortina azul com o logo), títulos que sobem palavra por palavra, números que contam, ícones que flutuam e seguem o mouse e a rolagem, cartões que inclinam com brilho, botões magnéticos, barra de progresso da rolagem e entrada em cascata dos resultados da busca. A órbita da página inicial e a faixa de especialidades são CSS. `js/paths-bg.js` faz as curvas do fundo. Com "reduzir movimento" ligado no sistema, tudo fica parado.
 
 ## Visual
 

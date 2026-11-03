@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<script>document.documentElement.classList.add('js');</script>
+<script>document.documentElement.classList.add('js');try{if(sessionStorage.getItem('cirmed-nav')==='1'&&!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('arriving');}sessionStorage.removeItem('cirmed-nav')}catch(e){}</script>
 <title>Contato | Cirmed</title>
 <meta name="description" content="WhatsApp (11) 99124-3655 para instituições, (11) 95153-1000 para plantões e rh@cirmed.com.br. Segunda a sexta, das 8h às 19h.">
 <link rel="canonical" href="https://dudugomes-student.github.io/cirmed-site/contato.html">
@@ -19,10 +19,12 @@
 <link rel="preload" href="fonts/nunito-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/nunito-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/cirmed.css">
-<script src="js/main.js" defer></script><script src="js/paths-bg.js" defer></script>
+<script src="js/main.js" defer></script><script src="js/paths-bg.js" defer></script><script src="js/motion.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+<div class="curtain" aria-hidden="true"><div class="curtain-panel"><span class="curtain-badge"><img src="assets/logo-128.png" width="361" height="128" alt=""></span><span class="curtain-line"></span></div></div>
+<div class="progress" aria-hidden="true"></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="traco" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8DBBD9"/><stop offset="1" stop-color="#2475A3"/></linearGradient></defs></svg>
 <header class="site-header">
   <div class="wrap header-bar">
@@ -42,9 +44,9 @@
 <section class="section" aria-labelledby="canais-title" style="padding-top:clamp(32px,5vw,56px)"><div class="wrap">
   <h2 class="sr-only" id="canais-title">Canais</h2>
   <div class="channels">
-    <a class="channel channel-art reveal" href="https://wa.me/5511991243655" target="_blank" rel="noopener noreferrer"><img class="channel-img" src="assets/3d/hospital.webp" width="520" height="422" alt="" aria-hidden="true" loading="lazy" decoding="async"><small>Instituições</small><strong>(11) 99124-3655</strong><span>WhatsApp</span><span class="sr-only"> (abre em nova aba)</span></a>
-    <a class="channel channel-art reveal" style="--d:.06s" href="https://wa.me/5511951531000" target="_blank" rel="noopener noreferrer"><img class="channel-img" src="assets/3d/stethoscope.webp" width="760" height="969" alt="" aria-hidden="true" loading="lazy" decoding="async"><small>Médicos e plantões</small><strong>(11) 95153-1000</strong><span>WhatsApp</span><span class="sr-only"> (abre em nova aba)</span></a>
-    <a class="channel channel-art reveal" style="--d:.12s" href="mailto:rh@cirmed.com.br"><img class="channel-img" src="assets/3d/calendar.webp" width="520" height="394" alt="" aria-hidden="true" loading="lazy" decoding="async"><small>E-mail</small><strong>rh@cirmed.com.br</strong><span>Propostas e documentos</span></a>
+    <a class="channel channel-art reveal" data-tilt href="https://wa.me/5511991243655" target="_blank" rel="noopener noreferrer"><img class="channel-img" src="assets/3d/hospital.webp" width="256" height="256" alt="" aria-hidden="true" loading="lazy" decoding="async"><small>Instituições</small><strong>(11) 99124-3655</strong><span>WhatsApp</span><span class="sr-only"> (abre em nova aba)</span></a>
+    <a class="channel channel-art reveal" data-tilt style="--d:.06s" href="https://wa.me/5511951531000" target="_blank" rel="noopener noreferrer"><img class="channel-img" src="assets/3d/medica.webp" width="256" height="256" alt="" aria-hidden="true" loading="lazy" decoding="async"><small>Médicos e plantões</small><strong>(11) 95153-1000</strong><span>WhatsApp</span><span class="sr-only"> (abre em nova aba)</span></a>
+    <a class="channel channel-art reveal" data-tilt style="--d:.12s" href="mailto:rh@cirmed.com.br"><img class="channel-img" src="assets/3d/envelope.webp" width="256" height="256" alt="" aria-hidden="true" loading="lazy" decoding="async"><small>E-mail</small><strong>rh@cirmed.com.br</strong><span>Propostas e documentos</span></a>
   </div>
   <p class="muted contact-note">Instagram <a href="https://www.instagram.com/cirmedbrasil/" target="_blank" rel="noopener noreferrer">@cirmedbrasil<span class="sr-only"> (abre em nova aba)</span></a> · Dados pessoais (LGPD): Marciano Rodrigues Morais, <a href="mailto:marcio@cirmed.com.br">marcio@cirmed.com.br</a></p>
 </div></section>

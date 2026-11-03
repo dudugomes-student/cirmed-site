@@ -3,7 +3,7 @@
 Fonte da verdade: tokens em `css/cirmed.css` (`:root`).
 
 ## Ilustrações: só 3D
-Todas as ilustrações são 3D (o logo é a única exceção): plástico branco brilhante com detalhes no azul da marca, sombra macia, fundo transparente. Cenas em `tools/3d/scenes.js`: mapa do Brasil em relevo (com estetoscópio e pino em Bauru, ou com pinos nas cidades com plantão), estetoscópio, calendário de escala, hospital, UBS, UPA, ambulância e escudo de integridade. Ícones de interface (setas, busca, WhatsApp) continuam em traço.
+Ícones 3D desenhados (Fluent Emoji, Microsoft, MIT), com vermelho e rosa trocados pelo azul da marca. Só o logo não é 3D. Uso: órbita em volta do hospital na página inicial, grupos flutuantes nos topos internos, cartões de serviço, faixa de especialidades, tipo de unidade na busca, contato e integridade. Ícones de interface (setas, busca, WhatsApp) continuam em traço.
 
 ## Pouco texto
 Cada seção tem um título curto e, no máximo, uma linha de apoio. O resto é imagem, número ou interação (busca de plantões, montar equipe).
@@ -31,6 +31,7 @@ Botões em pílula (`.btn-primary`, `.btn-outline`, `.btn-white`), portas de pú
 No topo de cada página e na chamada final: curvas finas em azul que fluem da esquerda para a direita (`js/paths-bg.js`), adaptadas do "Floating Paths" do 21st.dev (desenho do Background Paths da Kokonut UI, licença MIT), sem React. Cada curva fica fixa e bem suave; por cima, um trecho mais forte corre pelo traço, como um sinal. Sobre o texto à esquerda as curvas ficam mais fracas (máscara), e na chamada final usam o azul claro. Menos curvas no celular; pausa fora da tela; parado com movimento reduzido.
 
 ## Movimento
+Transição de página com cortina azul e o logo; títulos palavra por palavra; contadores; ícones flutuando com paralaxe; órbita girando; faixa de especialidades correndo; cartões que inclinam; botões magnéticos com reflexo; barra de progresso. Tudo desliga com movimento reduzido.
 O sublinhado se desenha com `stroke-dashoffset` quando entra na tela. Seções entram com `.reveal`. Com movimento reduzido, tudo aparece pronto.
 
 ## Textos

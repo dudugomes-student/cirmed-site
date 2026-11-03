@@ -68,6 +68,39 @@ def img3d(name, alt="", cls="art3d", eager=False, sizes=None):
     alt_attr = f'alt="{esc(alt)}"' if alt else 'alt="" aria-hidden="true"'
     return f'<img class="{cls}" src="assets/3d/{name}.webp" width="{w}" height="{h}" {alt_attr} {load}>'
 
+def float3d(name, cls="", depth=0.3, delay=0.0, alt=""):
+    """Ícone 3D que flutua (CSS) e se mexe com o mouse e a rolagem (data-depth)."""
+    return (f'<span class="float {cls}" data-depth="{depth}" style="--fd:{delay:.2f}s">'
+            f'{img3d(name, alt, cls="float-img")}</span>')
+
+ORBITA = ["estetoscopio", "medica", "ambulancia", "calendario", "coracao", "pino"]
+def orbit(label):
+    n = len(ORBITA)
+    items = "".join(
+        f'<li style="--i:{i};--n:{n}"><span class="orbit-item">{img3d(x, cls="orbit-img")}</span></li>' for i, x in enumerate(ORBITA))
+    return f'''<figure class="orbit-stage" role="img" aria-label="{label}">
+  <span class="orbit-glow" aria-hidden="true"></span>
+  <svg class="orbit-ring" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="49"/></svg>
+  <svg class="orbit-ring orbit-ring-2" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="49"/></svg>
+  <ul class="orbit" aria-hidden="true">{items}</ul>
+  <span class="orbit-center" data-depth="0.15">{img3d("hospital", cls="orbit-hub", eager=True)}</span>
+</figure>'''
+
+def map_stage(label):
+    return f'''<figure class="map-stage" role="img" aria-label="{label}">
+  <span class="orbit-glow" aria-hidden="true"></span>
+  {float3d("mapa", "map-main", 0.12)}
+  {float3d("pino", "pin-a", 0.5, 0.2)}{float3d("pino", "pin-b", 0.7, 0.9)}{float3d("pino", "pin-c", 0.4, 1.6)}
+</figure>'''
+
+ESP_ICONES = [("coracao", "Cardiologia"), ("bebe", "Pediatria"), ("seringa", "Anestesiologia"), ("osso", "Ortopedia"),
+              ("gestante", "Ginecologia e Obstetrícia"), ("estetoscopio", "Clínica Geral"), ("ambulancia", "Emergência"),
+              ("pulmoes", "Pulmonar"), ("cerebro", "Neurologia"), ("microscopio", "Diagnóstico"), ("dente", "Dental")]
+def marquee():
+    row = "".join(f'<li>{img3d(n, cls="mq-img")}<span>{t}</span></li>' for n, t in ESP_ICONES)
+    return (f'<div class="marquee" aria-label="Especialidades"><ul class="mq-track">{row}</ul>'
+            f'<ul class="mq-track" aria-hidden="true">{row}</ul></div>')
+
 PATHS = '<div class="paths-bg" data-paths aria-hidden="true"></div>'
 DEFS = ('<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>'
         '<linearGradient id="traco" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8DBBD9"/>'
@@ -130,7 +163,7 @@ FOOTER = f'''<footer class="site-footer">
   <a class="btn btn-outline" href="plantoes.html">{icon("search")}<span>Plantões</span></a>
 </div>'''
 
-def page(slug, title, desc, body, scripts=("main", "paths-bg"), noindex=False):
+def page(slug, title, desc, body, scripts=("main", "paths-bg", "motion"), noindex=False):
     url = f"{SITE_URL}/" if slug == "index.html" else f"{SITE_URL}/{slug}"
     js = "".join(f'<script src="js/{s}.js" defer></script>' for s in scripts)
     ld = ""
@@ -147,7 +180,7 @@ def page(slug, title, desc, body, scripts=("main", "paths-bg"), noindex=False):
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<script>document.documentElement.classList.add('js');</script>
+<script>document.documentElement.classList.add('js');try{{if(sessionStorage.getItem('cirmed-nav')==='1'&&!matchMedia('(prefers-reduced-motion: reduce)').matches){{document.documentElement.classList.add('arriving');}}sessionStorage.removeItem('cirmed-nav')}}catch(e){{}}</script>
 <title>{title}</title>
 <meta name="description" content="{desc}">
 <link rel="canonical" href="{url}">{robots}
@@ -167,6 +200,8 @@ def page(slug, title, desc, body, scripts=("main", "paths-bg"), noindex=False):
 </head>
 <body>
 <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+<div class="curtain" aria-hidden="true"><div class="curtain-panel"><span class="curtain-badge"><img src="assets/logo-128.png" width="361" height="128" alt=""></span><span class="curtain-line"></span></div></div>
+<div class="progress" aria-hidden="true"></div>
 {DEFS}
 {header(slug)}
 <main id="conteudo" tabindex="-1">
@@ -193,25 +228,25 @@ def form_result():
             f'<a class="btn btn-primary" href="{WA}" target="_blank" rel="noopener noreferrer">{icon("wa")}<span>Abrir no WhatsApp</span>{NEW_TAB}</a></div>')
 
 SERVICOS = [
-    ("stethoscope", "Plantonistas", "Um plantão ou a equipe inteira."),
-    ("calendar", "Escala terceirizada", "A Cirmed monta e repõe faltas."),
+    ("medica", "Plantonistas", "Um plantão ou a equipe inteira."),
+    ("calendario", "Escala terceirizada", "A Cirmed monta e repõe faltas."),
     ("hospital", "Gestão de unidades", "Do quadro de pessoal à rotina."),
-    ("ambulance", "Unidades móveis e SAMU", "Equipes para resgate."),
+    ("ambulancia", "Unidades móveis e SAMU", "Equipes para resgate."),
 ]
 def service_tiles():
     return '<div class="tiles">' + "".join(
-        f'<article class="tile reveal" style="--d:{i*0.07:.2f}s">{img3d(n)}<h3>{t}</h3><p>{p}</p></article>'
+        f'<article class="tile reveal" data-tilt style="--d:{i*0.08:.2f}s"><span class="tile-art">{img3d(n)}</span><h3>{t}</h3><p>{p}</p></article>'
         for i, (n, t, p) in enumerate(SERVICOS)) + "</div>"
 
 def stats():
     return f'''<dl class="stats">
-  <div class="reveal"><dt>Unidades com plantão aberto</dt><dd>{N_UNIDADES}</dd></div>
-  <div class="reveal" style="--d:.07s"><dt>Estados</dt><dd>{len(UFS_ATIVAS)}</dd></div>
-  <div class="reveal" style="--d:.14s"><dt>Especialidades nas escalas</dt><dd>{len(ESP_ATIVAS)}</dd></div>
+  <div class="reveal"><dt>Unidades com plantão aberto</dt><dd data-count-to="{N_UNIDADES}">{N_UNIDADES}</dd></div>
+  <div class="reveal" style="--d:.07s"><dt>Estados</dt><dd data-count-to="{len(UFS_ATIVAS)}">{len(UFS_ATIVAS)}</dd></div>
+  <div class="reveal" style="--d:.14s"><dt>Especialidades nas escalas</dt><dd data-count-to="{len(ESP_ATIVAS)}">{len(ESP_ATIVAS)}</dd></div>
 </dl>'''
 
 TRUST = f'''<div class="trust reveal">
-  {img3d("shield", cls="trust-art")}
+  <span class="float trust-float" data-depth="0.2">{img3d("escudo", cls="trust-art")}</span>
   <div><h2 class="subtitle">Programa de Integridade publicado</h2>
   <p>Código de ética, controles internos e canal para relatar irregularidades. CNPJ {CNPJ}.</p></div>
   <a class="btn btn-outline" href="programa-de-integridade.html"><span>Ler o programa</span>{icon("arrow")}</a>
@@ -232,18 +267,18 @@ page("index.html",
       <p class="kicker">Plantões e equipes médicas</p>
       <h1 class="display" id="hero-title" data-draw>Médicos para o seu plantão, em {stroke("todo o Brasil")}</h1>
       <div class="doors">
-        <a class="door" href="para-hospitais.html"><small>Sou hospital ou unidade</small><strong>Preciso de médicos</strong><span class="go">Montar equipe {icon("arrow")}</span></a>
-        <a class="door door-blue" href="plantoes.html"><small>Sou médico</small><strong>Quero plantão</strong><span class="go">Buscar plantões {icon("arrow")}</span></a>
+        <a class="door" data-tilt href="para-hospitais.html"><small>Sou hospital ou unidade</small><strong>Preciso de médicos</strong><span class="go">Montar equipe {icon("arrow")}</span></a>
+        <a class="door door-blue" data-tilt href="plantoes.html"><small>Sou médico</small><strong>Quero plantão</strong><span class="go">Buscar plantões {icon("arrow")}</span></a>
       </div>
     </div>
-    <figure class="hero-art reveal">{img3d("hero", "Mapa do Brasil em 3D com um estetoscópio e um pino azul marcando Bauru, no interior de São Paulo.", eager=True)}</figure>
+    {orbit("Hospital em 3D no centro, com estetoscópio, médica, ambulância, calendário, coração e pino girando em volta.")}
   </div>
 </section>
 
 <section class="section section-tight" aria-label="Números"><div class="wrap">{stats()}</div></section>
 
 <section class="section section-sky" aria-labelledby="plantoes-title"><div class="wrap split">
-  <figure class="reveal">{img3d("mapPins", f"Mapa do Brasil em 3D com pinos nas cidades onde há plantões abertos.")}</figure>
+  {map_stage("Mapa em 3D com pinos azuis flutuando.")}
   <div class="reveal" style="--d:.1s">
     <p class="kicker">Para médicos</p>
     <h2 class="title" id="plantoes-title">Ache seu <span class="blue">plantão</span></h2>
@@ -255,6 +290,8 @@ page("index.html",
     <ul class="chips chips-link">{"".join(f'<li><a href="plantoes.html?esp={esc(e)}">{esc(e)}</a></li>' for e in ["Clínica Geral", "Pediatria", "Ginecologia", "Anestesiologia", "Emergência", "Ortopedia"])}</ul>
   </div>
 </div></section>
+
+<section class="section section-marquee" aria-label="Especialidades">{marquee()}</section>
 
 <section class="section" aria-labelledby="servicos-title"><div class="wrap">
   <div class="section-head reveal">
@@ -284,12 +321,14 @@ SINONIMOS = {"Anestesiologia": "anestesia anestesista", "Pediatria": "pediatra",
     "GO alto risco": "ginecologia obstetricia", "Fonoaudiologia": "fono", "Enfermagem diarista": "enfermeira enfermeiro",
     "Enfermagem pediátrica": "enfermeira enfermeiro"}
 
+TIPO_IMG = {"hospital": "hospital", "ubs": "predio", "upa": "ambulancia"}
+
 def unit_card(i, nome, cidade, uf, tipo, esps):
     lugar = f"{cidade} · {uf}" if cidade else UF_NOMES[uf]
     busca = slug_txt(" ".join([nome, cidade, uf, UF_NOMES[uf], TIPOS[tipo]] + esps + [SINONIMOS.get(e, "") for e in esps]))
     chips = "".join(f'<li data-esp="{esc(e)}">{esc(e)}</li>' for e in esps)
-    return (f'<li class="unit" data-uf="{uf}" data-tipo="{tipo}" data-esps="{esc("|".join(esps))}" data-busca="{esc(busca)}" data-nome="{esc(nome)}" data-lugar="{esc(lugar)}">'
-            f'<div class="unit-art">{img3d(tipo, cls="unit-img")}</div>'
+    return (f'<li class="unit" data-tilt data-uf="{uf}" data-tipo="{tipo}" data-esps="{esc("|".join(esps))}" data-busca="{esc(busca)}" data-nome="{esc(nome)}" data-lugar="{esc(lugar)}">'
+            f'<div class="unit-art">{img3d(TIPO_IMG[tipo], cls="unit-img")}</div>'
             f'<div class="unit-body"><p class="unit-type">{TIPOS[tipo]}</p><h3>{esc(nome)}</h3>'
             f'<p class="unit-place">{icon("pin")}{esc(lugar)}</p><ul class="mini-chips">{chips}</ul></div>'
             f'<a class="btn btn-primary unit-cta" href="https://wa.me/{WA_PLANTAO}?text=' + esc(
@@ -311,7 +350,7 @@ page("plantoes.html",
     <h1 class="display" id="hero-title" data-draw>Plantões {stroke("abertos")}</h1>
     <p class="lede">{N_UNIDADES} unidades em {len(UFS_ATIVAS)} estados. Escolha e chame no WhatsApp.</p>
   </div>
-  <figure class="reveal">{img3d("stethoscope", cls="art3d art-steth", eager=True)}</figure>
+  <figure class="hero-cluster" aria-hidden="true">{float3d("estetoscopio", "c-main", 0.25)}{float3d("medico", "c-a", 0.5, 0.6)}{float3d("calendario", "c-b", 0.4, 1.2)}{float3d("pino", "c-c", 0.7, 1.8)}</figure>
 </div></section>
 
 <section class="section section-search" aria-labelledby="busca-title"><div class="wrap">
@@ -328,7 +367,7 @@ page("plantoes.html",
   <p class="results-count" role="status" aria-live="polite" data-count>{N_UNIDADES} unidades</p>
   <ul class="units" data-units>{cards}</ul>
   <div class="empty" data-empty hidden>
-    {img3d("calendar", cls="empty-art")}
+    <span class="float">{img3d("lupa", cls="empty-art")}</span>
     <h3 class="subtitle">Nada com esses filtros, por enquanto</h3>
     <p class="muted">Deixe seu cadastro com a especialidade e o estado onde quer trabalhar.</p>
     <a class="btn btn-primary" href="#cadastro">Fazer cadastro</a>
@@ -359,7 +398,7 @@ page("plantoes.html",
     {form_result()}
   </form>
 </div></section>
-''', scripts=("main", "paths-bg", "plantoes", "forms"))
+''', scripts=("main", "paths-bg", "motion", "plantoes", "forms"))
 
 # página antiga -> nova
 (ROOT / "para-medicos.html").write_text(f'''<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Plantões | Cirmed</title>
@@ -394,7 +433,7 @@ page("para-hospitais.html",
     <h1 class="display" id="hero-title" data-draw>Faltou plantonista {stroke("hoje?")}</h1>
     <div class="btn-row">{wa_btn()}<a class="btn btn-outline" href="#equipe"><span>Montar equipe</span>{icon("arrow")}</a></div>
   </div>
-  <figure class="reveal">{img3d("hospital", cls="art3d art-hosp", eager=True)}</figure>
+  <figure class="hero-cluster" aria-hidden="true">{float3d("hospital", "c-main", 0.25)}{float3d("ambulancia", "c-a", 0.55, 0.5)}{float3d("medica", "c-b", 0.45, 1.1)}{float3d("prancheta", "c-c", 0.7, 1.7)}</figure>
 </div></section>
 
 <section class="section" id="equipe" aria-labelledby="equipe-title"><div class="wrap">
@@ -424,6 +463,8 @@ page("para-hospitais.html",
   </form>
 </div></section>
 
+<section class="section section-marquee" aria-label="Especialidades">{marquee()}</section>
+
 <section class="section section-sky" aria-labelledby="serv-title"><div class="wrap">
   <div class="section-head reveal"><p class="kicker">Serviços</p><h2 class="title" id="serv-title">O que dá para <span class="blue">contratar</span></h2></div>
   {service_tiles()}
@@ -435,7 +476,7 @@ page("para-hospitais.html",
 </div></section>
 
 <section class="section" aria-label="Programa de Integridade" style="padding-top:0"><div class="wrap">{TRUST}</div></section>
-''', scripts=("main", "paths-bg", "forms"))
+''', scripts=("main", "paths-bg", "motion", "forms"))
 
 # =====================================================================
 # Sobre
@@ -449,7 +490,7 @@ page("sobre.html",
     <h1 class="display" id="hero-title" data-draw>Sobre a {stroke("Cirmed")}</h1>
     <p class="lede">Sede em Bauru (SP). Plantões em {len(UFS_ATIVAS)} estados.</p>
   </div>
-  <figure class="reveal">{img3d("mapPins", "Mapa do Brasil em 3D com pinos nas cidades onde a Cirmed tem plantões.", eager=True)}</figure>
+  {map_stage("Mapa em 3D com pinos azuis flutuando.")}
 </div></section>
 
 <section class="section section-tight" aria-label="Números"><div class="wrap">{stats()}</div></section>
@@ -486,9 +527,9 @@ page("contato.html",
 <section class="section" aria-labelledby="canais-title" style="padding-top:clamp(32px,5vw,56px)"><div class="wrap">
   <h2 class="sr-only" id="canais-title">Canais</h2>
   <div class="channels">
-    <a class="channel channel-art reveal" href="{WA}" target="_blank" rel="noopener noreferrer">{img3d("hospital", cls="channel-img")}<small>Instituições</small><strong>{WA_SHOW}</strong><span>WhatsApp</span>{NEW_TAB}</a>
-    <a class="channel channel-art reveal" style="--d:.06s" href="https://wa.me/{WA_PLANTAO}" target="_blank" rel="noopener noreferrer">{img3d("stethoscope", cls="channel-img")}<small>Médicos e plantões</small><strong>{WA_PLANTAO_SHOW}</strong><span>WhatsApp</span>{NEW_TAB}</a>
-    <a class="channel channel-art reveal" style="--d:.12s" href="mailto:{EMAIL}">{img3d("calendar", cls="channel-img")}<small>E-mail</small><strong>{EMAIL}</strong><span>Propostas e documentos</span></a>
+    <a class="channel channel-art reveal" data-tilt href="{WA}" target="_blank" rel="noopener noreferrer">{img3d("hospital", cls="channel-img")}<small>Instituições</small><strong>{WA_SHOW}</strong><span>WhatsApp</span>{NEW_TAB}</a>
+    <a class="channel channel-art reveal" data-tilt style="--d:.06s" href="https://wa.me/{WA_PLANTAO}" target="_blank" rel="noopener noreferrer">{img3d("medica", cls="channel-img")}<small>Médicos e plantões</small><strong>{WA_PLANTAO_SHOW}</strong><span>WhatsApp</span>{NEW_TAB}</a>
+    <a class="channel channel-art reveal" data-tilt style="--d:.12s" href="mailto:{EMAIL}">{img3d("envelope", cls="channel-img")}<small>E-mail</small><strong>{EMAIL}</strong><span>Propostas e documentos</span></a>
   </div>
   <p class="muted contact-note">Instagram <a href="{INSTAGRAM}" target="_blank" rel="noopener noreferrer">@cirmedbrasil{NEW_TAB}</a> · Dados pessoais (LGPD): Marciano Rodrigues Morais, <a href="mailto:marcio@cirmed.com.br">marcio@cirmed.com.br</a></p>
 </div></section>
@@ -590,7 +631,7 @@ page("404.html",
     <h1 class="display" id="hero-title" data-draw>Página {stroke("não encontrada")}</h1>
     <div class="btn-row"><a class="btn btn-primary" href="index.html"><span>Início</span></a><a class="btn btn-outline" href="plantoes.html">{icon("search")}<span>Plantões</span></a></div>
   </div>
-  <figure>{img3d("ambulance", cls="art3d art-hosp", eager=True)}</figure>
+  <figure class="hero-cluster" aria-hidden="true">{float3d("lupa", "c-main", 0.3)}{float3d("pino", "c-a", 0.6, 0.7)}</figure>
 </div></section>
 ''', noindex=True)
 
